@@ -6,11 +6,11 @@ const typeDefs = gql`
     _id: ID
     username: String
     email: String
-    password: String
-    savedBooks: [savedBooks]!
+    bookCount: Int
+    savedBooks: [Book]!
   }
 
-  type savedBooks {
+  type Book {
     authors: [String]
     bookId: String
     title: String
@@ -18,8 +18,6 @@ const typeDefs = gql`
     image: String
   }
   
-
-
   type Auth {
     token: ID!
     user: User
