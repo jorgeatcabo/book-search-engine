@@ -27,7 +27,7 @@ const resolvers = {
 
       return { token, user };
     },
-    login: async (parent, { email, password }) => {
+    loginUser: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
 
       if (!user) {
@@ -45,13 +45,13 @@ const resolvers = {
     },
 
     // Add a third argument to the resolver to access data in our `context`
-    addBook: async (parent, { userId, book }, context) => {
+    saveBook: async (parent, { userId, book }, context) => {
       // If context has a `user` property, that means the user executing this mutation has a valid JWT and is logged in
       if (context.user) {
         return User.findOneAndUpdate(
           { _id: userId },
           {
-            $addToSet: { books: book },
+            $addToSet: { savedBooks: book },
           },
           {
             new: true,
