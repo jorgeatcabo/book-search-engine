@@ -12,11 +12,14 @@ const resolvers = {
       return User.findOne({ _id: userId });
     },
     // By adding context to our query, we can retrieve the logged in user without specifically searching for them
-    me: async (parent, args, context) => {
-      if (context.user) {
+    // me: async (parent, args, context) => {
+    //   if (context.user) {
+    //     return User.findOne({ _id: context.user._id });
+    //   }
+    //   throw new AuthenticationError('You need to be logged in!');
+    // },
+    me: async (parent, args) => {
         return User.findOne({ _id: context.user._id });
-      }
-      throw new AuthenticationError('You need to be logged in!');
     },
   },
 
@@ -45,20 +48,21 @@ const resolvers = {
     },
 
     // Add a third argument to the resolver to access data in our `context`
-    saveBook: async (parent, { userId, book }, context) => {
+    saveBook: async (parent, { user, body }, context) => {
       // If context has a `user` property, that means the user executing this mutation has a valid JWT and is logged in
-      if (context.user) {
-        return User.findOneAndUpdate(
-          { _id: userId },
-          {
-            $addToSet: { savedBooks: book },
-          },
-          {
-            new: true,
-            runValidators: true,
-          }
+      console.log(user);
+      try {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: user._id },
+          { $addToSet: { savedBooks: body } },
+          { new: true, runValidators: true }
         );
+        return res.json(updatedUser);
+      } catch (err) {
+        console.log(err);
+        return res.status(400).json(err);
       }
+
       // If user attempts to execute this mutation and isn't logged in, throw an error
       throw new AuthenticationError('You need to be logged in!');
     },
@@ -70,7 +74,7 @@ const resolvers = {
       throw new AuthenticationError('You need to be logged in!');
     },
     // Make it so a logged in user can only remove a skill from their own profile
-    removeBook: async (parent, { book }, context) => {
+    deleteBook: async (parent, { book }, context) => {
       if (context.user) {
         return User.findOneAndUpdate(
           { _id: context.user._id },

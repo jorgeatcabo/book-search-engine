@@ -23,9 +23,7 @@ export const QUERY_SINGLE_PROFILE = gql`
 export const GET_ME = gql`
   query me {
     me {
-      _id
-      name
-      skills
+     User
     }
   }
 `;
