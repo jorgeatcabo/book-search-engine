@@ -2,6 +2,7 @@ const { AuthenticationError } = require('apollo-server-express');
 const { User } = require('../models');
 const { signToken } = require('../utils/auth');
 
+
 const resolvers = {
   Query: {
     users: async () => {
@@ -30,6 +31,12 @@ const resolvers = {
 
       return { token, user };
     },
+    addUser2: async (parent, { username, email, password }) => {
+      const user = await User.create({ username, email, password });
+      //const token = signToken(user);
+
+      return {  user };
+    },
     loginUser: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
 
@@ -48,24 +55,61 @@ const resolvers = {
     },
 
     // Add a third argument to the resolver to access data in our `context`
-    saveBook: async (parent, { user, body }, context) => {
+    //saveBook: async (parent, { userId, bookToSave }, context) => {
+    saveBook: async (parent, { userId, book} ) => {
       // If context has a `user` property, that means the user executing this mutation has a valid JWT and is logged in
-      console.log(user);
-      try {
-        const updatedUser = await User.findOneAndUpdate(
-          { _id: user._id },
-          { $addToSet: { savedBooks: body } },
-          { new: true, runValidators: true }
-        );
-        return res.json(updatedUser);
-      } catch (err) {
-        console.log(err);
-        return res.status(400).json(err);
-      }
+     // console.log(userId);
+      return User.findOneAndUpdate(
+        { _id: userId },
+        {
+          $addToSet: { savedBooks: book },
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
 
+
+
+
+      
+
+      // if (context.user) {
+      // try {
+      //   const updatedUser = await User.findOneAndUpdate(
+      //     { _id: userId },
+      //     { $addToSet: { savedBooks: book } },
+      //     { new: true, runValidators: true }
+      //   );
+      //   return res.json(updatedUser);
+      // } catch (err) {
+      //   console.log(err);
+      //   return res.status(400).json(err);
+      // }
+
+
+     
+
+    //}
       // If user attempts to execute this mutation and isn't logged in, throw an error
-      throw new AuthenticationError('You need to be logged in!');
+      //throw new AuthenticationError('You need to be logged in!');
     },
+
+    // saveBook: async (_,args) => {
+    //   // If context has a `user` property, that means the user executing this mutation has a valid JWT and is logged in
+    //   //if (context.user) {
+    //     const updatedUser = await User.findOneAndUpdate(
+    //       { _id: args.userId },
+    //       { $addToSet: { savedBooks: args.input } },
+    //       { new: true, runValidators: true }
+    //     );
+
+    //     return updatedUser;
+    //  // }
+    //   throw new AuthenticationError('You need to be logged in!');
+    // },
+      
     // Set up mutation so a logged in user can only remove their profile and no one else's
     removeUser: async (parent, args, context) => {
       if (context.user) {
