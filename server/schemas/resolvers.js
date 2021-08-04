@@ -54,61 +54,18 @@ const resolvers = {
       return { token, user };
     },
 
-    // Add a third argument to the resolver to access data in our `context`
-    //saveBook: async (parent, { userId, bookToSave }, context) => {
-    saveBook: async (parent, { userId, book},context ) => {
-      // If context has a `user` property, that means the user executing this mutation has a valid JWT and is logged in
-     console.log(userId);
-      return await User.findOneAndUpdate(
-        { _id: userId },
-        {
-          $addToSet: { savedBooks: book },
-        },
-        {
-          new: true,
-          runValidators: true,
-        }
-      );
-
-
-
-
-      
-
-      // if (context.user) {
-      // try {
-      //   const updatedUser = await User.findOneAndUpdate(
-      //     { _id: userId },
-      //     { $addToSet: { savedBooks: book } },
-      //     { new: true, runValidators: true }
-      //   );
-      //   return res.json(updatedUser);
-      // } catch (err) {
-      //   console.log(err);
-      //   return res.status(400).json(err);
-      // }
-
-
-     
-
-    //}
-      // If user attempts to execute this mutation and isn't logged in, throw an error
-      //throw new AuthenticationError('You need to be logged in!');
+    saveBook: async (parent, { input }, context) => {
+     if (context.user) {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $addToSet: { savedBooks: input } },
+          { new: true, runValidators: true }
+        );
+        return updatedUser;
+      }
+      throw new AuthenticationError("You need to be logged in!");
     },
 
-    // saveBook: async (_,args) => {
-    //   // If context has a `user` property, that means the user executing this mutation has a valid JWT and is logged in
-    //   //if (context.user) {
-    //     const updatedUser = await User.findOneAndUpdate(
-    //       { _id: args.userId },
-    //       { $addToSet: { savedBooks: args.input } },
-    //       { new: true, runValidators: true }
-    //     );
-
-    //     return updatedUser;
-    //  // }
-    //   throw new AuthenticationError('You need to be logged in!');
-    // },
       
     // Set up mutation so a logged in user can only remove their profile and no one else's
     removeUser: async (parent, args, context) => {
