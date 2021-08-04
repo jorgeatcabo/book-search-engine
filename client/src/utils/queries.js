@@ -21,9 +21,18 @@ export const QUERY_SINGLE_PROFILE = gql`
 `;
 
 export const GET_ME = gql`
-  query me {
+  {
     me {
-     User
+      _id
+      username
+      email
+      savedBooks {
+        title
+        bookId
+        authors
+        description
+        image
+      }
     }
   }
 `;
