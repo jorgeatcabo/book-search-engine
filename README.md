@@ -54,7 +54,7 @@ For Logout click the corresponding button, in this moment you are presented with
 
 
 # Contribution
-It is necessary to know NodeJs, Apollo Server, Apollo Client, Graphql, MongoDb, Mongoose ORM, JWT, ReactJs, Bootstrap and CSS. You can contribute reporting bugs, suggesting enhacements, pull requests. Best practices for class/id naming conventions, indentation, quality comments, etc.
+It is necessary to know NodeJs, Apollo Server, Apollo Client, GraphQL API, MongoDb, Mongoose ORM, JWT, ReactJs, Bootstrap and CSS. You can contribute reporting bugs, suggesting enhacements, pull requests. Best practices for class/id naming conventions, indentation, quality comments, etc.
 
 # Test
 For local testing use: "git clone git@github.com:jorgeatcabo/book-search-engine.git", “npm install” and "npm run develop". For testing on a deployment URL use: 
