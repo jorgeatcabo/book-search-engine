@@ -69,4 +69,4 @@ MIT
 
 ----
 
-![App Working](./public/react-portfolio.gif)
+![App Working](./client/public/book-search-engine.gif)
