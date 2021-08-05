@@ -5,13 +5,6 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
-    users: async () => {
-      return User.find();
-    },
-
-    user: async (parent, { userId }) => {
-      return User.findOne({ _id: userId });
-    },
      me: async (parent, args, context) => {
       if (context.user) {
         const userData = await User.findOne({ _id: context.user._id })
@@ -59,13 +52,6 @@ const resolvers = {
     },
 
       
-    // Set up mutation so a logged in user can only remove their profile and no one else's
-    removeUser: async (parent, args, context) => {
-      if (context.user) {
-        return User.findOneAndDelete({ _id: context.user._id });
-      }
-      throw new AuthenticationError('You need to be logged in!');
-    },
     // Make it so a logged in user can only remove a book from their own profile
     deleteBook: async (parent, { bookId }, context) => {
       if (context.user) {
