@@ -20,7 +20,7 @@ MERN Book Search Engine.
 Fully functioning Google Books API search engine built with a GraphQL API built with Apollo Server. The app was built using the MERN stack with a React front end, MongoDB database, and Node.js/Express.js server. 
 
 # Installation
-"npm run develop" for running the application.
+"npm install" and "npm run develop" for running the application.
 
 # Usage
 As an avid reader you want to search for new books to read so that you can keep a list of books to purchase. For this reason this app was developed.
